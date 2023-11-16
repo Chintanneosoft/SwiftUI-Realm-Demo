@@ -17,6 +17,7 @@ struct AddDeveloperView: View {
     
     var body: some View {
         VStack{
+            
             Text("Fill Details")
                 .padding()
                 .font(.title)

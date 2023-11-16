@@ -11,7 +11,6 @@ import RealmSwift
 struct UpdateDeveloperView: View {
     
     @ObservedRealmObject var developer: Developers
-    
     @Binding var isPresenting:Bool
     
     var body: some View {
@@ -63,9 +62,3 @@ struct UpdateDeveloperView: View {
         }
     }
 }
-
-//struct UpdateDeveloperView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UpdateDeveloperView()
-//    }
-//}

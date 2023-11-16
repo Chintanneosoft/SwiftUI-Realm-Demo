@@ -38,7 +38,6 @@ struct ContentView: View {
                             .foregroundColor(.yellow)
                             .listRowBackground(Color.black.opacity(1))
                             .swipeActions {
-                                
                                 Button {
                                     $developers.remove(dev)
                                 } label: {
@@ -64,7 +63,6 @@ struct ContentView: View {
                         .foregroundColor(.yellow)
                         .background(.black)
                         .cornerRadius(15)
-                    
                 }
             }
             .scrollContentBackground(.hidden)
@@ -94,10 +92,10 @@ struct ContentView: View {
     }
 }
 
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
+}
 
 
