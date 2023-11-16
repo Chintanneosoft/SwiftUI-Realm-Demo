@@ -11,58 +11,83 @@ import RealmSwift
 struct ContentView: View {
     
     @ObservedResults(Developers.self) var developers
+    @ObservedRealmObject var developer: Developers
     
-    @StateObject var vm = DeveloperViewModel()
-    
-    @State var isPresenting = false
-    
+    @State var isPresentingAdd = false
+    @State var isPresentingUpdate = false
+
     var body: some View {
         VStack{
+            Text("iOS Developers")
+                .padding()
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.black)
+                .background(.red)
+                .border(.brown)
+                .cornerRadius(15)
+                .clipped()
+                .padding()
+            
             List{
-                
                 if !developers.isEmpty{
                     ForEach(developers,id: \.id) { developer in
-                        Text("Name: \(developer.name ?? ""), Exp: \(developer.exp ?? "")")
-                    }
-                    .onDelete { indexOffset in
-                        for index in indexOffset {
-                            print(index,indexOffset)
-                            if index < developers.count {
-                                if let error = vm.deleteData(index: index){
-                                    print(error)
+                        DeveloperCell(dev: developer)
+                            .frame(maxWidth: .infinity)
+                            .font(.subheadline)
+                            .fontWeight(.bold)
+                            .foregroundColor(.yellow)
+                            .listRowBackground(Color.black.opacity(1))
+                            .swipeActions {
+                                Button {
+                                    $developers.remove(developer)
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                                
+                                Button {
+                                    self.developer = developer
+                                } label: {
+                                    Image(systemName: "trash")
                                 }
                             }
-                        }
                     }
                 } else {
                     Text("Add Some Data")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .font(.subheadline)
+                        .fontWeight(.bold)
+                        .foregroundColor(.yellow)
+                        .background(.black)
+                        .cornerRadius(15)
+                    
                 }
             }
+            .scrollContentBackground(.hidden)
             
             Button {
-                isPresenting.toggle()
+                isPresentingAdd.toggle()
             } label: {
                 Text("Add Data")
                     .padding()
                     .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundColor(.purple)
-                    .background(.black)
+                    .foregroundColor(.black)
+                    .background(.purple)
+                    .border(.blue)
                     .cornerRadius(15)
                     .clipped()
             }
-            .sheet(isPresented: $isPresenting) {
-                AddDeveloperView(name: "", exp: "", isPresenting: $isPresenting)
+            .sheet(isPresented: $isPresentingAdd) {
+                AddDeveloperView(name: "", exp: "", isPresenting: $isPresentingAdd)
+            }
+            .sheet(isPresented: $isPresentingUpdate) {
+                UpdateDeveloperView(developer: developer, isPresenting: $isPresentingUpdate)
             }
             
         }
-        .onChange(of: isPresenting) { newValue in
-            if !newValue {
-                DispatchQueue.main.async {
-                    vm.getData()
-                }
-            }
-        }
+        
     }
 }
 

@@ -15,6 +15,7 @@ struct DeveloperCell: View {
     var body: some View {
         HStack{
             Text("Name: \(dev.name ?? "")")
+            Spacer()
             Text("Experience: \(dev.exp ?? "")")
         }
     }

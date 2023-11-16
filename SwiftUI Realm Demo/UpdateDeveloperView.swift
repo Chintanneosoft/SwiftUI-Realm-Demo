@@ -1,23 +1,23 @@
 //
-//  AddDeveloperView.swift
+//  UpdateDeveloperView.swift
 //  SwiftUI Realm Demo
 //
-//  Created by Neosoft on 15/11/23.
+//  Created by Neosoft on 16/11/23.
 //
 
 import SwiftUI
 import RealmSwift
 
-struct AddDeveloperView: View {
+struct UpdateDeveloperView: View {
     
-    @State var name: String
-    @State var exp: String
+    @ObservedRealmObject var developer: Developers
+    
     @Binding var isPresenting:Bool
-    @ObservedResults(Developers.self) var developers
     
     var body: some View {
         VStack{
-            Text("Fill Details")
+            
+            Text("Edit Details")
                 .padding()
                 .font(.title)
                 .fontWeight(.bold)
@@ -28,7 +28,7 @@ struct AddDeveloperView: View {
                 .clipped()
                 .padding()
             
-            TextField("Developer's Name", text: $name)
+            TextField("Developer's Name", text: $developer.name.toUnwrapped(defaultValue: ""))
                 .multilineTextAlignment(.center)
                 .padding()
                 .font(.title3)
@@ -39,7 +39,7 @@ struct AddDeveloperView: View {
                 .clipped()
                 .padding()
             
-            TextField("Developer's Experience", text: $exp)
+            TextField("Developer's Experience", text: $developer.exp.toUnwrapped(defaultValue: ""))
                 .multilineTextAlignment(.center)
                 .padding()
                 .font(.title3)
@@ -51,10 +51,6 @@ struct AddDeveloperView: View {
                 .padding()
             
             Button("Submit") {
-                let dev = Developers()
-                dev.name = name
-                dev.exp = exp
-                $developers.append(dev)
                 isPresenting.toggle()
             }
             .padding()
@@ -68,3 +64,8 @@ struct AddDeveloperView: View {
     }
 }
 
+//struct UpdateDeveloperView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UpdateDeveloperView()
+//    }
+//}
