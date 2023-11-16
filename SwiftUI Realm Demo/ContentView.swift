@@ -11,8 +11,7 @@ import RealmSwift
 struct ContentView: View {
     
     @ObservedResults(Developers.self) var developers
-    @ObservedRealmObject var developer: Developers
-    
+    @State var dev = Developers()
     @State var isPresentingAdd = false
     @State var isPresentingUpdate = false
 
@@ -31,25 +30,29 @@ struct ContentView: View {
             
             List{
                 if !developers.isEmpty{
-                    ForEach(developers,id: \.id) { developer in
-                        DeveloperCell(dev: developer)
+                    ForEach(developers,id: \.id) { dev in
+                        DeveloperCell(dev: dev)
                             .frame(maxWidth: .infinity)
                             .font(.subheadline)
                             .fontWeight(.bold)
                             .foregroundColor(.yellow)
                             .listRowBackground(Color.black.opacity(1))
                             .swipeActions {
-                                Button {
-                                    $developers.remove(developer)
-                                } label: {
-                                    Image(systemName: "trash")
-                                }
                                 
                                 Button {
-                                    self.developer = developer
+                                    $developers.remove(dev)
                                 } label: {
                                     Image(systemName: "trash")
                                 }
+                                .tint(.red)
+                                
+                                Button {
+                                    self.dev = dev
+                                    isPresentingUpdate.toggle()
+                                } label: {
+                                    Image(systemName: "pencil")
+                                }
+                                .tint(.green)
                             }
                     }
                 } else {
@@ -83,7 +86,7 @@ struct ContentView: View {
                 AddDeveloperView(name: "", exp: "", isPresenting: $isPresentingAdd)
             }
             .sheet(isPresented: $isPresentingUpdate) {
-                UpdateDeveloperView(developer: developer, isPresenting: $isPresentingUpdate)
+                UpdateDeveloperView(developer: dev, isPresenting: $isPresentingUpdate)
             }
             
         }
@@ -91,10 +94,10 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView()
+//    }
+//}
 
 
