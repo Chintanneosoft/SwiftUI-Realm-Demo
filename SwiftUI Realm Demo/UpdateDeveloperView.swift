@@ -9,8 +9,11 @@ import SwiftUI
 import RealmSwift
 
 struct UpdateDeveloperView: View {
-    
-    @ObservedRealmObject var developer: Developers
+    @ObservedResults(Developers.self) var developers
+    @Binding var developer: Developers
+    @State var name: String?
+    @State var exp: String?
+    @Binding var index: Int
     @Binding var isPresenting:Bool
     
     var body: some View {
@@ -26,8 +29,12 @@ struct UpdateDeveloperView: View {
                 .cornerRadius(15)
                 .clipped()
                 .padding()
+                .onAppear{
+                    name = developer.name ?? ""
+                    exp = developer.exp ?? ""
+                }
             
-            TextField("Developer's Name", text: $developer.name.toUnwrapped(defaultValue: ""))
+            TextField("Developer's Name", text: $name.toUnwrapped(defaultValue: ""))
                 .multilineTextAlignment(.center)
                 .padding()
                 .font(.title3)
@@ -38,7 +45,7 @@ struct UpdateDeveloperView: View {
                 .clipped()
                 .padding()
             
-            TextField("Developer's Experience", text: $developer.exp.toUnwrapped(defaultValue: ""))
+            TextField("Developer's Experience", text: $exp.toUnwrapped(defaultValue: ""))
                 .multilineTextAlignment(.center)
                 .padding()
                 .font(.title3)
@@ -51,6 +58,7 @@ struct UpdateDeveloperView: View {
             
             Button("Submit") {
                 isPresenting.toggle()
+                updateItem(id: developer.id , name: name ?? "", exp: exp ?? "")
             }
             .padding()
             .font(.title2)
@@ -61,4 +69,13 @@ struct UpdateDeveloperView: View {
             .clipped()
         }
     }
+    private func updateItem(id: String, name: String, exp: String) {
+            let realm = try! Realm()
+            let developers = realm.objects(Developers.self)
+        let developer = developers[index]
+            try! realm.write {
+                developer.name = name
+                developer.exp = exp
+            }
+        }
 }

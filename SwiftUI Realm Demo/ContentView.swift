@@ -11,10 +11,11 @@ import RealmSwift
 struct ContentView: View {
     
     @ObservedResults(Developers.self) var developers
-    @State var dev = Developers()
+    @State var updateDev = Developers()
     @State var isPresentingAdd = false
     @State var isPresentingUpdate = false
-
+    @State var index: Int = 0
+    
     var body: some View {
         VStack{
             Text("iOS Developers")
@@ -30,7 +31,7 @@ struct ContentView: View {
             
             List{
                 if !developers.isEmpty{
-                    ForEach(developers,id: \.id) { dev in
+                    ForEach(Array(developers.enumerated()),id: \.1.id) { (index,dev) in
                         DeveloperCell(dev: dev)
                             .frame(maxWidth: .infinity)
                             .font(.subheadline)
@@ -38,6 +39,7 @@ struct ContentView: View {
                             .foregroundColor(.yellow)
                             .listRowBackground(Color.black.opacity(1))
                             .swipeActions {
+                                
                                 Button {
                                     $developers.remove(dev)
                                 } label: {
@@ -46,8 +48,12 @@ struct ContentView: View {
                                 .tint(.red)
                                 
                                 Button {
-                                    self.dev = dev
+                                    self.updateDev.id = developers[index].id
+                                    self.updateDev.name = developers[index].name
+                                    self.updateDev.exp = developers[index].exp
+                                    self.index = index
                                     isPresentingUpdate.toggle()
+                                    
                                 } label: {
                                     Image(systemName: "pencil")
                                 }
@@ -84,18 +90,15 @@ struct ContentView: View {
                 AddDeveloperView(name: "", exp: "", isPresenting: $isPresentingAdd)
             }
             .sheet(isPresented: $isPresentingUpdate) {
-                UpdateDeveloperView(developer: dev, isPresenting: $isPresentingUpdate)
+                UpdateDeveloperView(developer: $updateDev, index: $index, isPresenting: $isPresentingUpdate)
             }
-            
         }
-        
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
-
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView()
+//    }
+//}
 
